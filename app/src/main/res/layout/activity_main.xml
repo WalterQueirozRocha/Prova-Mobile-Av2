@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <Button
+        android:id="@+id/btn_registrar_trilha"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/register_trail"
+        android:layout_marginBottom="8dp"/>
+
+    <Button
+        android:id="@+id/btn_gerenciar_trilha"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/manage_trail"
+        android:layout_marginBottom="8dp"/>
+
+    <Button
+        android:id="@+id/btn_compartilhar_trilha"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/share_trail"
+        android:layout_marginBottom="8dp"/>
+
+    <Button
+        android:id="@+id/btn_configuracao"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/settings"
+        android:layout_marginBottom="8dp"/>
+
+    <Button
+        android:id="@+id/btn_sobre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/about"/>
+
+</LinearLayout>

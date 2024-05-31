@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="back">Voltar</string>
+    <string name="share_trail">Compartilhar Trilha</string>
+    <string name="settings">Configurações</string>
+    <string name="manage_trail">Gerenciar Trilha</string>
+    <string name="register_trail">Registrar Trilha</string>
+    <string name="about">Sobre</string>
+    <string name="speed_unit">Unidade de Velocidade</string>
+    <string name="coordinate_format">Formato da Cordeenada</string>
+    <string name="map_orientation">Orientação do Mapa</string>
+    <string name="map_type">Tipo do Mapa</string>
+    <string name="degrees">Graus</string>
+    <string name="degrees_minutes">Graus/Minutos</string>
+    <string name="km_h">km/h</string>
+    <string name="m_s">m/s</string>
+    <string name="none">Nenhuma</string>
+    <string name="north_up">Norte para cima</string>
+    <string name="satellite">Satelite</string>
+    <string name="vector">Vetorial</string>
+    <string name="course_up">Curso para cima</string>
+    <string name="degrees_minutes_seconds">Graus/Minutos/Segundos</string>
+    <string name="credits">Créditos</string>
+    <string name="students">Alunos: Felipe Gabriel e Walter Queiroz</string>
+    <string name="timer">"Cronômetro "</string>
+    <string name="distance">"Distancia "</string>
+    <string name="speed">Velocidade</string>
+</resources>
