@@ -50,11 +50,11 @@ public class GerenciarTrilhaActivity extends FragmentActivity implements OnMapRe
         summaries = trilhasDB.getAllSummaries();
         List<String> summariesText = new ArrayList<>();
         for (WayPoint summary : summaries) {
-            String avgSpeedFormatted = String.format("%.2f", summary.getAvgSpeed());
+            String avgSpeedFormatted = String.format("%.4f", summary.getAvgSpeed()*3,6);
             String totalDistanceFormatted = String.format("%.2f", summary.getTotalDistance());
             summariesText.add("ID: " + summary.getId() + "\n" +
                     "Data: " + summary.getStartDate() + "\n" +
-                    "Velocidade Média: " + avgSpeedFormatted + " km/h" + "\n" +
+                    "Velocidade Média: " + avgSpeedFormatted + " m/s" + "\n" +
                     "Distância: " + totalDistanceFormatted + " m" + "\n" +
                     "Duração: " + summary.getDuration() / 1000 + " s");
         }

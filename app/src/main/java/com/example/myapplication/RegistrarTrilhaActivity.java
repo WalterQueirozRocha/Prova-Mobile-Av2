@@ -25,11 +25,12 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 
@@ -47,10 +48,11 @@ public class RegistrarTrilhaActivity extends FragmentActivity implements OnMapRe
     private TextView mTextViewDistance;
     private TextView mTextViewSpeed;
     private long mStartTime = 0L;
-    private Handler mHandler = new Handler();
+    private final Handler mHandler = new Handler();
     private long mElapsedTime = 0L;
     private double totalDistance = 0;
     private double speed;
+    private List<Integer> waypointIds = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +67,6 @@ public class RegistrarTrilhaActivity extends FragmentActivity implements OnMapRe
         mTextViewDistance = findViewById(R.id.text_view_distance);
         mTextViewSpeed = findViewById(R.id.text_view_speed);
 
-        startTimer();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -73,7 +74,7 @@ public class RegistrarTrilhaActivity extends FragmentActivity implements OnMapRe
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         trilhasDB = new TrilhasDB(this);
 
-        mLocationRequest = new LocationRequest.Builder(1000).build();
+        mLocationRequest = new LocationRequest.Builder(500).build();
 
         mLocationCallback = new LocationCallback() {
             @Override
@@ -84,7 +85,7 @@ public class RegistrarTrilhaActivity extends FragmentActivity implements OnMapRe
                     LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
                     mMap.clear();
                     speed = location.getSpeed();
-                    double distance = 0;
+                    double distance;
                     if (mLastLocation != null){
                         distance = mLastLocation.distanceTo(location);
                         totalDistance += distance;
@@ -96,12 +97,14 @@ public class RegistrarTrilhaActivity extends FragmentActivity implements OnMapRe
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 19));
 
                     trilhasDB.addWayPoint(new WayPoint(location.getLatitude(), location.getLongitude()));
+                    int waypointId = trilhasDB.getLastId();
+                    waypointIds.add(waypointId);
                 }
             }
         };
     }
 
-    private Runnable mUpdateTimeTask = new Runnable() {
+    private final Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
             long currentTime = System.currentTimeMillis();
             mElapsedTime = currentTime - mStartTime;
@@ -123,8 +126,8 @@ public class RegistrarTrilhaActivity extends FragmentActivity implements OnMapRe
         minutes = minutes % 60;
         seconds = seconds % 60;
         mTextViewTimer.setText(String.format("Tempo: %02d:%02d:%02d",hours, minutes, seconds));
-        mTextViewDistance.setText(String.format("Distância: %.2f Km", totalDistance/1000));
-        mTextViewSpeed.setText(String.format("Velocidade: %.2f km/h", speed));
+        mTextViewDistance.setText(String.format("Distância: %.2f m", totalDistance));
+        mTextViewSpeed.setText(String.format("Velocidade: %.2f mh", speed));
     }
 
     @Override
@@ -132,7 +135,7 @@ public class RegistrarTrilhaActivity extends FragmentActivity implements OnMapRe
         mMap = googleMap;
         String tipoMapa;
         tipoMapa = sharedPreferences.getString("tipo_mapa","Vetorial");
-        if (tipoMapa == "Vetorial"){
+        if (tipoMapa.equals("Vetorial")){
             mMap.setMapType(1);
         } else {
             mMap.setMapType(2);
@@ -156,6 +159,7 @@ public class RegistrarTrilhaActivity extends FragmentActivity implements OnMapRe
 
         mMap.setMyLocationEnabled(true);
         startLocationUpdates();
+        startTimer();
     }
 
     private void startLocationUpdates() {
@@ -181,10 +185,10 @@ public class RegistrarTrilhaActivity extends FragmentActivity implements OnMapRe
         super.onStop();
         stopLocationUpdates();
         mHandler.removeCallbacks(mUpdateTimeTask);
-        double avgSpeed = totalDistance / mElapsedTime;
+        double avgSpeed = totalDistance / (mElapsedTime/1000.0);
         String startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date(mStartTime));
 
-        trilhasDB.addTrilhaSummary(startDate, avgSpeed, totalDistance, mElapsedTime);
+        trilhasDB.addTrilhaSummary(startDate, avgSpeed, totalDistance, mElapsedTime, waypointIds);
     }
 
     private void stopLocationUpdates() {
