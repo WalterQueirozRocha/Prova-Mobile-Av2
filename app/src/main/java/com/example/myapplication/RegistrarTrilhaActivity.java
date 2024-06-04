@@ -126,8 +126,15 @@ public class RegistrarTrilhaActivity extends FragmentActivity implements OnMapRe
         minutes = minutes % 60;
         seconds = seconds % 60;
         mTextViewTimer.setText(String.format("Tempo: %02d:%02d:%02d",hours, minutes, seconds));
-        mTextViewDistance.setText(String.format("Distância: %.2f m", totalDistance));
-        mTextViewSpeed.setText(String.format("Velocidade: %.2f mh", speed));
+        String velocidade = sharedPreferences.getString("unidade_velocidade", "km/h");
+        if (velocidade.equals("km/h")){
+            mTextViewSpeed.setText(String.format("Velocidade: %.2f Km/h", speed*3,6));
+            mTextViewDistance.setText(String.format("Distância: %.2f Km", totalDistance/1000));
+        } else {
+            mTextViewSpeed.setText(String.format("Velocidade: %.2f m/s", speed));
+            mTextViewDistance.setText(String.format("Distância: %.2f m", totalDistance));
+        }
+
     }
 
     @Override

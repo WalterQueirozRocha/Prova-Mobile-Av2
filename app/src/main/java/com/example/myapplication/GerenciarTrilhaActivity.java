@@ -49,14 +49,27 @@ public class GerenciarTrilhaActivity extends FragmentActivity implements OnMapRe
         listViewSummaries = findViewById(R.id.list_view_summaries);
         summaries = trilhasDB.getAllSummaries();
         List<String> summariesText = new ArrayList<>();
-        for (WayPoint summary : summaries) {
-            String avgSpeedFormatted = String.format("%.4f", summary.getAvgSpeed()*3,6);
-            String totalDistanceFormatted = String.format("%.2f", summary.getTotalDistance());
-            summariesText.add("ID: " + summary.getId() + "\n" +
-                    "Data: " + summary.getStartDate() + "\n" +
-                    "Velocidade Média: " + avgSpeedFormatted + " m/s" + "\n" +
-                    "Distância: " + totalDistanceFormatted + " m" + "\n" +
-                    "Duração: " + summary.getDuration() / 1000 + " s");
+        String velocidade = sharedPreferences.getString("unidade_velocidade", "km/h");
+        if (velocidade.equals("m/s")) {
+            for (WayPoint summary : summaries) {
+                String avgSpeedFormatted = String.format("%.2f", summary.getAvgSpeed());
+                String totalDistanceFormatted = String.format("%.2f", summary.getTotalDistance());
+                summariesText.add("ID: " + summary.getId() + "\n" +
+                        "Data: " + summary.getStartDate() + "\n" +
+                        "Velocidade Média: " + avgSpeedFormatted + " m/s" + "\n" +
+                        "Distância: " + totalDistanceFormatted + " m" + "\n" +
+                        "Duração: " + summary.getDuration() / 1000 + " Segundos");
+            }
+        }else {
+            for (WayPoint summary : summaries) {
+                String avgSpeedFormatted = String.format("%.4f", summary.getAvgSpeed() * 3, 6);
+                String totalDistanceFormatted = String.format("%.2f", summary.getTotalDistance()/1000);
+                summariesText.add("ID: " + summary.getId() + "\n" +
+                        "Data: " + summary.getStartDate() + "\n" +
+                        "Velocidade Média: " + avgSpeedFormatted + " Km/h" + "\n" +
+                        "Distância: " + (totalDistanceFormatted) + " Km" + "\n" +
+                        "Duração: " + ((summary.getDuration() / 1000) / 3600) + " Horas");
+            }
         }
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, summariesText);
         listViewSummaries.setAdapter(adapter);
@@ -72,6 +85,7 @@ public class GerenciarTrilhaActivity extends FragmentActivity implements OnMapRe
             }
         });
     }
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
