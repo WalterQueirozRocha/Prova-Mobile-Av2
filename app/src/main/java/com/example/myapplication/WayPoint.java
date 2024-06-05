@@ -11,7 +11,6 @@ public class WayPoint {
 
 
     public WayPoint(double latitude, double longitude) {
-        this.id = 0;
         this.latitude = latitude;
         this.longitude = longitude;
     }
